@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            background: #ececec;
+            font-family: arial, helvetica, sans-serif;
+            color: #333;
+        }
+        h1, h2, #output{
+            margin: 20px 0;
+        }
+        p{
+            margin: 10px 15px;
+        }
+        .wrapper{
+            margin: 20px;
+            padding: 20px;
+            background: #f3f3f3;
+            box-shadow: 3px 3px 4px #333;
+        }
+        #output img{
+            width: 150px;
+            height: 150px;
+            display: inline-block;
+            border: 4px solid #fff;
+            margin: 6px;
+            border-radius: 2px
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>Gimme some images</h1>
+        <h2>(load images to the browser)</h2>
+        <input type="file" id="images" multiple />
+        <p>* supports jpeg and png files only</p>
+        <div id="output"></div>
+    </div>
+    <script type="text/javascript">
+
+        startProcessing();
+
+        function startProcessing(){
+            // get input element
+            var element = document.getElementById('images');
+            // get output element
+            var output = document.getElementById('output');
+
+            if(checkApi()==true){
+                clear(output);
+                load(element,output);
+                element.onchange = function(){
+                    load(element,output);
+                }
+            };
+        }
+
+        function checkApi(){
+            // check if file reader is available
+            return FileReader != null;
+        }
+
+        function clear(output){
+            // clear the output in browser
+            // it is needed after going back after clicking a minature and on load
+            // to show proper images
+            while (output.firstChild) {
+                output.removeChild(output.firstChild);
+            }
+        }
+
+        function load(element, output){
+            if(element.files.length>0){
+                for(var i=0; i<element.files.length; i++){
+                    var singleFile = element.files[i];
+                    if(singleFile.type == 'image/jpeg' || singleFile.type == 'image/png'){
+                        // prepare new reader
+                        var reader = new FileReader();
+                        // create anchor and image elements
+                        // load result of loading to src and href
+                        reader.onload = function(e){
+                            var aEl = document.createElement('a');
+                            aEl.href = e.target.result;
+                            var imgEl = document.createElement('img');
+                            imgEl.src = e.target.result;
+                            aEl.appendChild(imgEl);
+                            output.appendChild(aEl);
+                        }
+                        // read data from file
+                        if(reader.readAsDataURL != null) {
+                            reader.readAsDataURL(singleFile);
+                        }else{
+                            // alert if something is wrong with reading a file
+                            alert('sorry, can not read the files');
+                        }
+                    }else{
+                        // alert if wrong data file
+                        alert('wrong data type, use jpeg or png file(s)');
+                        break;
+                    }
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>

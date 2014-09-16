@@ -1,0 +1,86 @@
+//
+// Buttons
+// --------------------------------------------------
+
+$baseColor:    #F4C40D;
+$extendColor:  #EAAE1E;
+$borderColor:  #FF8500;
+$borderRadius: 1px;
+$textColor:    $color-text;
+$fontSize:     14px;
+$fontWeight:   bold;
+$txtTransform: none;
+$padding:      5px; 
+$shadow:       true;
+$psel:         0;
+$paddingRatio: 4;
+//$f0nt:         $font-basic;
+$f0nt:         'Roboto condensed';
+$textShadow:   false; 
+ 
+
+@mixin primaryButton(
+                     $baseColor: $baseColor,        // base color
+                     $extendColor: $extendColor,    // gradient from base to extend
+                     $borderColor: $borderColor,    // border color
+                     $borderRadius: $borderRadius,  // border radius 
+                     $textColor: $textColor,        // text color
+                     $shadow: $shadow,              // box shadow optional
+                     $textShadow: $textShadow,      // text shadow optional
+                     $txtTransform: $txtTransform,  // text style
+                     $padding: $padding,            // padding - right and left 3 (as default) times bigger than top and bottom
+                     $paddingRatio: $paddingRatio,  // - up
+                     $imageIco: false,              // like is in mixin
+                     $map: "sprite",                // like is in mixin
+                     $psel: "after" ,               // like is in mixin
+                     $fontSize: $fontSize,
+                     $f0nt: $f0nt
+                    ) 
+    {
+    cursor: pointer;
+    $sprt-map:  sprite-map("#{$map}/*.png");
+    padding: $padding ($padding*$paddingRatio);
+    @include border-radius($borderRadius);
+    border: 0px solid $borderColor;  
+    @if $shadow {
+        @include box-shadow(0 1px 0 0 rgba(0, 0, 0, 0.1), 0 -1px 0 0 rgba(0, 0, 0, 0.2) inset);
+    }    
+    @include background-image(linear-gradient(top,$baseColor, $extendColor));
+    background: -ms-linear-gradient(top, ie-hex-str($baseColor) 0%,ie-hex-str($extendColor)  100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F99113', endColorstr='#F99113',GradientType=1 );
+    background-color: $baseColor;
+    & > span {
+        @if $imageIco {  
+            @include put-icon($imageIco,$psel,$map); 
+            padding-left: image-width(sprite-file($sprt-map, $imageIco)) + 10px;
+            height: image-height(sprite-file($sprt-map, $imageIco));
+            display: inline;
+        }
+        &:after, &:before { 
+
+        }
+        & > span { 
+            color:$textColor;
+            font-size:$fontSize;
+            font-weight: $fontWeight; 
+            text-transform: $txtTransform;
+            @if $textShadow {
+                text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+            }
+            font-family: $f0nt;
+        }
+    }
+    &:hover, &:active, &:focus {
+            @include box-shadow(0 1px 0 0 rgba(0, 0, 0, 0.2), 0 -1px 0 0 rgba(0, 0, 0, 0.3) inset, 0 12px 24px 2px rgba(darken($baseColor, 15%), .5) inset);
+            @include transition(all .1s linear 0s);
+            //@include background(linear-gradient(top, darken($baseColor, 7%), darken($extendColor, 7%)));
+    }
+    &:disabled {
+            background: none repeat scroll 0 0 rgb(128, 128, 128);
+    }
+}
+
+button {
+    @include primaryButton;
+}
+

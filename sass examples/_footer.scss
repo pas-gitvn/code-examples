@@ -1,0 +1,233 @@
+// @import "compass";
+//@import "../images/footer_icons_sprite/*.png"; 
+// @import "compass/utilities/links/link-colors";
+ 
+
+.footer-container {
+    background: url(../images/pattern.png) repeat;
+    font-family: $font-custom;
+    .block-selling-info{
+        background: $color-back-light;
+        border-top: 1px solid $color-border;
+    }
+    .fax-shipping{
+        background: $color-light;
+        .shipping, .fax{
+            display: table-cell;
+            width: 36%;
+            padding: 26px 0 60px;
+            vertical-align: top;
+            .block-title, .phone-no, .pdf-link{
+                font: normal 18px "Roboto condensed";
+                position: relative;
+                top: 6px;
+                display: inline-block;
+                float: left;
+            }
+            .fax{
+                text-align: right;
+            }
+            .fax .block-title, .phone-no, .pdf-link{
+                float: none;
+            }
+            .phone-no, .pdf-link{
+                margin-left: 14px;
+            }
+            .phone-no{
+                color: #29577b;
+            }
+            .pdf-link{
+                width: 194px;
+                margin-left: 20px;
+                @include put-icon(pdf);
+                float: right;
+                @include put-icon(thawte, after);
+                a{
+                    color: #0079a9;
+                    font-size: 11px;
+                    width: 100px;
+                    display: inline-block;
+                    margin-left: 20px;
+                }
+                &:before{
+                    top: 6px;
+                }
+                &:after{
+                    right: 0;
+                    top: -10px;
+                }
+            }
+        }
+        .shipping{
+            width: 60%;
+            ul{
+                display: inline-block;
+            }
+        }
+        ul {
+            width: 300px;
+            margin-left: 20px;
+            li {
+                @include put-icon(dhl, 0);
+                @include ir-no-text;
+                margin: 8px 7px;
+                float: left;
+                &.dhl{
+                    margin-top: 10px;
+                }
+                &.ups {
+                    @include put-icon(ups, 0);
+                }
+                &.db-schenker {
+                    @include put-icon(db-schenker, 0);
+                    margin-top: 15px;
+                }
+                &.gls {
+                    @include put-icon(gls, 0);
+                    margin-top: 12px;
+                }
+            }
+        }
+    }
+    .selling-information,.fax-shipping .inner{
+        display: table;
+        width: 1180px;
+        margin: 0 auto;
+    }
+    .selling-information {
+        height: 140px;
+        li {
+            display: table-cell;
+            min-width: 16.4%;
+            width: 16.5% !important;
+            max-width: 16.6%;
+            height: 140px;
+            padding: 0 0 0 70px;
+            vertical-align: middle;
+            font-family: "Roboto condensed bold";
+            font-size: 16px;
+            color: $color-text-dark;
+            &>span{
+                display: inline-block;
+                margin-top: 14px;
+                line-height: 16px;
+            }
+            span > span {
+                font-family: $font-basic;
+                font-size: 14px;
+                color: $color-text-light;
+            }
+        }
+        .secure {
+            @include put-icon(secure);
+        }
+        .sheet {
+            @include put-icon(sheet);
+        }
+        .box {
+            @include put-icon(box);
+        }
+        .truck {
+            @include put-icon(delivery);
+        }
+        .hand {
+            @include put-icon(price);
+        }
+        .minvalue {
+            @include put-icon(minvalue);
+        }
+        .footer_icons{
+            &:before{
+                left: 0;
+            }
+        }
+    }
+
+}
+
+.footer {
+    overflow: hidden;
+    position: relative;
+    .block-title {
+        font-family: $font-custom;
+        font-size: 16px;
+        color: #333333;
+        margin-bottom: 20px
+    }
+    p {
+        margin: 0;
+    }
+
+    .footer-down {
+        .footer-menu{
+            display: table;
+            width: 100%;
+            margin-bottom: 20px;
+            &>div{
+                display: table-cell;
+                min-width: 15.4%;
+                width: 15.5%;
+                max-width: 15.6%;
+                &.contact{
+                    min-width: 20.4%;
+                    width: 20.5%;
+                    max-width: 20.6%;
+                    p{
+                        float: right;
+                        font: italic normal 12px $font-basic;
+                        color: #a4a4a4;
+                        position: absolute;
+                        right: 0;
+                        bottom: 20px;
+                    }
+                    ul{
+                        @include put-icon(contact);
+                        margin: 0;
+                        padding-left: 100px;
+                        &:before{
+                            left: 0;
+                            top: -6px;
+                        }
+                    }
+                    ul li:nth-of-type(2){
+                        color: #fad104;
+                        font-size: 18px;
+                        font-family: 'Roboto condensed';
+                    }
+                }
+            }
+            h4{
+                font-family: 'Roboto condensed bold';
+                font-size: 18px;
+                color: $color-back-light;
+                margin: 15px 0;
+            }
+            ul {
+                margin-right:10px;
+                li {
+                    font-family: $font-basic;
+                    background-position: 0 5px;
+                    background-repeat: no-repeat;
+                    line-height: 22px;
+                    color: $color-text-lightened-max;
+                    a {
+                        &:hover {
+                            color: $color-text-orange;
+                        }
+                        font-size:13px;
+                        color: $color-text-lightened-max;
+                        text-decoration: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
