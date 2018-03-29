@@ -1,0 +1,92 @@
+// This helper returns true or false on frontend when a particular widget
+// is set to current store and a particular page (home, category or product).
+// With this, side banners can be easily customized on a site.
+// For example we have a banner/widget on one of categories so we want to 
+// set the site to the center if there are no banners, but to the left when a banner is active.
+// Using this helper you can easily set an additional class to the <body> tag like banner--active for example.
+// One more thing: Mage::getModel('banner/list')->getCollection() - this is a custom model which is giving an opprotunity
+// to grab a collection from widget_instance_page table.
+// All you have to do is to write a module with this helper and a standard model with a resource of a widget_instance_page table.
+
+<?php
+
+class Esitecoding_Banner_Helper_Data extends Mage_Core_Helper_Abstract
+{
+    public function getBanners() {
+        $storeNum = Mage::app()->getStore()->getId();
+
+        // get banners list
+        $storeBanners = $this->hasBanners($storeNum);
+        // if store has no banners return false
+        if($storeBanners == false) {
+            return false;
+        }
+
+        // get current page handles
+        $handleslist = Mage::app()->getLayout()->getUpdate()->getHandles();
+        // handle patterns
+        $homePattern = array('cms_index_index');
+        $catPattern = array('catalog_category_layered', 'catalog_category_default');
+        $prodPattern = array('PRODUCT_TYPE_configurable', 'PRODUCT_TYPE_grouped', 'PRODUCT_TYPE_simple');
+        // an empty value to check if a banner is for every category or product
+        $fullView = array('');
+
+        // get collection of banners list and filter by store banners
+        $filteredInstances = Mage::getModel('banner/list')->getCollection()
+            ->addFieldToFilter('instance_id', array('in' => $storeBanners))
+            ->getColumnValues('layout_handle');
+
+        // check if a current page has same handler as in a database
+        $checkContent = array_intersect($filteredInstances, $handleslist);
+
+        // filter handlers on a particular page to return if a banner is on a particular page
+        if(array_intersect($homePattern, $checkContent)) {
+            return true;
+        }
+        // check category pages if apply
+        if(array_intersect($catPattern, $checkContent)) {
+            $catInstances = Mage::getModel('banner/list')->getCollection()
+                ->addFieldToFilter('instance_id', array('in' => $storeBanners))
+                ->addFieldToFilter('layout_handle', array('in' => $handleslist))
+                ->getColumnValues('entities');
+            if(array_intersect($fullView, $catInstances)) {
+                return true;
+            }
+            $currentCategoryId = array(Mage::registry('current_category')->getId());
+            foreach($catInstances as $catInstance) {
+                if(count(array_intersect($currentCategoryId, explode(',', $catInstance))) > 0) {
+                    return true;
+                }
+            }
+        }
+        // check product views if apply
+        if(array_intersect($prodPattern, $checkContent)) {
+            $prodInstances = Mage::getModel('banner/list')->getCollection()
+                ->addFieldToFilter('instance_id', array('in' => $storeBanners))
+                ->addFieldToFilter('layout_handle', array('in' => $handleslist))
+                ->getColumnValues('entities');
+            if(array_intersect($fullView, $prodInstances)) {
+                return true;
+            }
+            $currentProductId = Mage::registry('current_product')->getId();
+            foreach($prodInstances as $prodInstance) {
+                if(count(array_intersect($currentProductId, explode(',', $prodInstance))) > 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected function hasBanners($sNum) {
+        $widgetInstances = Mage::getModel('widget/widget_instance')
+            ->getCollection()
+            ->addFieldToFilter('store_ids', $sNum)
+            ->getColumnValues('instance_id');
+        $wInstancesCounter = count($widgetInstances);
+        if($wInstancesCounter > 0) {
+            return $widgetInstances;
+        }
+        return false;
+    }
+}
